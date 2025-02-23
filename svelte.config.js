@@ -2,7 +2,6 @@ import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import { mdsvex, escapeSvelte } from "mdsvex";
 import { createHighlighter } from "shiki";
 import adapter from "@sveltejs/adapter-vercel";
-import { Highlighter } from "lucide-svelte";
 
 /** Caching highlighter agar tidak membuat instance baru setiap kali */
 let highlighterInstance;
