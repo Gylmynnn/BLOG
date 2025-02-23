@@ -1,4 +1,3 @@
-export const prerender = true;
 import * as config from "$lib/config";
 import type { Post } from "$lib/types";
 import type { RequestEvent } from "@sveltejs/kit";
@@ -13,7 +12,7 @@ function escapeXml(str: string) {
 }
 
 export async function GET({ fetch }: RequestEvent) {
-   const response: Response = await fetch("api/posts");
+   const response: Response = await fetch("/api/posts");
    const headers: Record<string, string> = { "Content-Type": "application/xml" };
 
    if (!response.ok) {
