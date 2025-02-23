@@ -13,7 +13,7 @@ function escapeXml(str: string) {
 }
 
 export async function GET({ fetch }: RequestEvent) {
-   const response: Response = await fetch("/api/posts");
+   const response: Response = await fetch("api/posts");
    const headers: Record<string, string> = { "Content-Type": "application/xml" };
 
    if (!response.ok) {
