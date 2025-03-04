@@ -8,6 +8,8 @@ categoris:
 published: true
 ---
 
+<img src="/golang-cover.jpeg" alt="error"/>
+
 ## Sejarah Golang
 
 Golang atau Go adalah bahasa pemrograman yang dikembangkan oleh Google pada tahun 2007 dan diumumkan secara publik pada tahun 2009. Bahasa ini dirancang oleh Robert Griesemer, Rob Pike, dan Ken Thompson dengan tujuan menciptakan bahasa yang efisien, mudah digunakan, dan memiliki performa tinggi. Golang memiliki sintaks yang sederhana namun kuat, serta mendukung concurrency dengan fitur goroutines.
@@ -197,54 +199,6 @@ func (p Person) Greet() {
 func main() {
     person := Person{Name: "Alice", Age: 25}
     person.Greet()
-}
-```
-
-### 9. Goroutine dan Channel (Concurrency)
-
-```go
-package main
-
-import (
-    "fmt"
-    "time"
-)
-
-func sayHello() {
-    fmt.Println("Hello from Goroutine!")
-}
-
-func main() {
-    go sayHello()
-    time.Sleep(time.Second) // Tunggu goroutine selesai
-    fmt.Println("Main function finished")
-}
-```
-
-### 10. Error Handling
-
-```go
-package main
-
-import (
-    "errors"
-    "fmt"
-)
-
-func divide(a, b float64) (float64, error) {
-    if b == 0 {
-        return 0, errors.New("cannot divide by zero")
-    }
-    return a / b, nil
-}
-
-func main() {
-    result, err := divide(10, 0)
-    if err != nil {
-        fmt.Println("Error:", err)
-    } else {
-        fmt.Println("Result:", result)
-    }
 }
 ```
 
