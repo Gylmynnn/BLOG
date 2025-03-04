@@ -1,3 +1,3 @@
-import img from "./components/image.svelte";
+// import img from "./components/image.svelte";
 
-export { img };
+// export { img };
