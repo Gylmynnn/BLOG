@@ -5,7 +5,7 @@
 
 <nav class="nav-bar-container">
    <a href="/" class="nav-bar-title">
-      <b>{config.title}</b>
+      <h4>{config.title}</h4>
    </a>
 
    <ul class="nav-bar-links">
@@ -19,7 +19,8 @@
 
 <style>
    nav {
-      padding-block: var(--size-7);
+      margin-top: var(--size-7);
+      padding-block: var(--size-2);
 
       @media (min-width: 768px) {
          display: flex;
@@ -28,6 +29,7 @@
       }
 
       .nav-bar-links {
+         /* display: none; */
          margin-block: var(--size-7);
 
          @media (min-width: 768px) {
