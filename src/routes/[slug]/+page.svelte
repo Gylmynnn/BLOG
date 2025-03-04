@@ -23,6 +23,8 @@
       {/each}
    </div>
 
+   <br />
+
    <div class="prose">
       <data.content />
    </div>
