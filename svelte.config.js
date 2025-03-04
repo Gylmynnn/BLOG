@@ -3,8 +3,8 @@ import { mdsvex, escapeSvelte } from "mdsvex";
 import { createHighlighter } from "shiki";
 import adapter from "@sveltejs/adapter-vercel";
 
-/** Caching highlighter agar tidak membuat instance baru setiap kali */
-let highlighterInstance;
+/** Cache highlighter agar tidak membuat instance baru setiap kali */
+let highlighterInstance = null;
 const installedLanguages = [
    "javascript",
    "typescript",
@@ -15,6 +15,16 @@ const installedLanguages = [
    "python",
 ];
 
+function getHighlighter() {
+   if (!highlighterInstance) {
+      highlighterInstance = createHighlighter({
+         themes: ["catppuccin-mocha"],
+         langs: installedLanguages,
+      });
+   }
+   return highlighterInstance;
+}
+
 /** @type {import('mdsvex').MdsvexOptions} */
 const mdsvexOptions = {
    extensions: [".md"],
@@ -23,20 +33,13 @@ const mdsvexOptions = {
    },
    highlight: {
       highlighter: async (code, lang = "text") => {
-         if (!highlighterInstance) {
-            highlighterInstance = await createHighlighter({
-               themes: ["catppuccin-mocha"],
-               langs: [...installedLanguages],
-            });
-         }
-
+         const highlighter = await getHighlighter();
          const html = escapeSvelte(
-            highlighterInstance.codeToHtml(code, {
+            highlighter.codeToHtml(code, {
                lang,
                theme: "catppuccin-mocha",
             }),
          );
-
          return `{@html \`${html}\` }`;
       },
    },
@@ -46,7 +49,6 @@ const mdsvexOptions = {
 const config = {
    preprocess: [vitePreprocess(), mdsvex(mdsvexOptions)],
    extensions: [".svelte", ".md"],
-
    kit: {
       adapter: adapter(),
    },
