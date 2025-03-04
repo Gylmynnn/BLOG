@@ -2,7 +2,6 @@
    import { formatDate } from "$lib/utils";
    import * as config from "$lib/config";
    import type { PageProps } from "./$types";
-
    let { data }: PageProps = $props();
 </script>
 
