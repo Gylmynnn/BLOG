@@ -11,5 +11,6 @@
       height: 100%;
       display: grid;
       place-content: center;
+      color: #f38ba8;
    }
 </style>
