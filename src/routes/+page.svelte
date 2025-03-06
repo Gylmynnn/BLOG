@@ -7,6 +7,7 @@
 
 <svelte:head>
    <title>{config.title}</title>
+   <meta name="description" content={config.description} />
 </svelte:head>
 
 <section class="posts-container">
