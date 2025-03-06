@@ -4,6 +4,7 @@
 
 <svelte:head>
    <title>ABOUT</title>
+   <meta name="description" content="ABOUT ME" />
 </svelte:head>
 
 <section class="">
