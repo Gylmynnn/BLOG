@@ -4,7 +4,6 @@
 <head>
    <script type="module">
       const theme = localStorage.getItem("color-scheme");
-
       theme
          ? document.documentElement.setAttribute("color-scheme", theme)
          : localStorage.setItem("color-scheme", "dark");
