@@ -7,29 +7,27 @@
 <button onclick={theme.toggle} aria-label="Toggle theme">
    {#if theme.currentTheme === "dark"}
       <div in:fly={{ y: 10 }}>
-         <Sun />
-         <span>Light</span>
+         <Sun size={30} />
       </div>
    {:else}
       <div in:fly={{ y: -10 }}>
-         <Moon />
-         <span>Dark</span>
+         <Moon size={30}/>
       </div>
    {/if}
 </button>
 
 <style>
    button {
-      padding: 0;
+      padding : 0;
       font-weight: inherit;
       background: none;
-      border: none;
+      border: none; 
       box-shadow: none;
       overflow: hidden;
 
       > * {
-         display: flex;
+         display: inline-flex;
          gap: var(--size-2);
       }
-   }
+   } 
 </style>

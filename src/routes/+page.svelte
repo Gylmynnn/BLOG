@@ -10,7 +10,7 @@
    <meta name="description" content={config.description} />
 </svelte:head>
 
-<section class="posts-container">
+<section class="posts-container lg:pl-80 lg:pt-20 pt-16 pb-40 lg:pb-10">
    <ul class="posts">
       {#each data.posts as post}
          <li class="post">

@@ -8,7 +8,11 @@ categoris:
 published: true
 ---
 
-<img src="/my-software.png" alt="error"/>
+<script>
+    import Images from "../lib/components/images.svelte";
+</script>
+
+<Images src="/my-software.webp" alt="error"></Images>
 
 ### 1. Neovim
 

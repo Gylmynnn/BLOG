@@ -2,9 +2,13 @@
    interface Props {
       src: string;
       alt: string;
+      width?: string;
+      height?: string;
    }
-
-   let { src, alt }: Props = $props();
+   let { src, alt, width, height }: Props = $props();
 </script>
 
-<img {src} {alt} loading="lazy" width="400" />
+<picture>
+   <source srcset={src} type="image/webp" />
+   <img {src} {alt} loading="lazy" {width} {height} />
+</picture>

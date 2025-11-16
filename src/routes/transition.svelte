@@ -6,7 +6,6 @@
       children: Snippet;
       url: string;
    }
-
    let { children, url }: Props = $props();
 </script>
 

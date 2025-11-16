@@ -2,6 +2,11 @@ import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 import { mdsvex, escapeSvelte } from "mdsvex";
 import { createHighlighter } from "shiki";
 import adapter from "@sveltejs/adapter-vercel";
+import fs from "fs";
+
+const everblush = JSON.parse(
+   fs.readFileSync("./src/lib/shiki.theme.json", "utf8")
+);
 
 /** Cache highlighter agar tidak membuat instance baru setiap kali */
 let highlighterInstance = null;
@@ -18,7 +23,7 @@ const installedLanguages = [
 function getHighlighter() {
    if (!highlighterInstance) {
       highlighterInstance = createHighlighter({
-         themes: ["catppuccin-mocha"],
+         themes: [everblush],
          langs: installedLanguages,
       });
    }
@@ -37,7 +42,7 @@ const mdsvexOptions = {
          const html = escapeSvelte(
             highlighter.codeToHtml(code, {
                lang,
-               theme: "catppuccin-mocha",
+               theme: "everblush",
             }),
          );
          return `{@html \`${html}\` }`;

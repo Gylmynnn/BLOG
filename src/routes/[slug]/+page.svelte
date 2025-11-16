@@ -12,10 +12,16 @@
    <meta property="og:title" content={data.meta.title} />
 </svelte:head>
 
-<article>
-   <hgroup>
+<article class="pt-12 lg:pt-24">
+   <hgroup class="hidden lg:block">
       <h1>{data.meta.title}</h1>
-      <p>Published at {formatDate(data.meta.date)}</p>
+      <h5>{data.meta.description}</h5>
+      <p class="pt-4">Published at {formatDate(data.meta.date)}</p>
+   </hgroup>
+   <hgroup class="lg:hidden">
+      <h2>{data.meta.title}</h2>
+      <h5 class="w-1/2">{data.meta.description}</h5>
+      <p class="pt-4">Published at {formatDate(data.meta.date)}</p>
    </hgroup>
 
    <div class="tags">
@@ -25,7 +31,6 @@
    </div>
 
    <br />
-
    <div class="prose">
       <data.content />
    </div>
@@ -38,11 +43,6 @@
 
       h1 {
          text-transform: capitalize;
-      }
-
-      h1 + p {
-         margin-top: var(--size-2);
-         color: var(--text-2);
       }
 
       .tags {

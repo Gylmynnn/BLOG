@@ -21,7 +21,8 @@
 		"svelte-check": "^4.0.0",
 		"tailwindcss": "^4.0.0",
 		"typescript": "^5.0.0",
-		"vite": "^6.0.0"
+		"vite": "^6.0.0",
+		"vite-plugin-compression2": "^2.2.0"
 	},
 	"dependencies": {
 		"@fontsource/atkinson-hyperlegible": "^5.1.1",
