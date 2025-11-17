@@ -7,6 +7,13 @@ categoris:
     - motivasi
 published: true
 ---
+<script>
+    import Images from "../lib/components/images.svelte";
+</script>
+
+<Images src="/2025.webp" alt="error"></Images>
+
+<br/>
 
 ```go
 func main() {

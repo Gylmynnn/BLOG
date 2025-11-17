@@ -49,14 +49,9 @@
          {#each projects as p}
             <article
                class="group rounded-lg border py-4 flex items-center justify-between gap-4 transition-all duration-200 hover:-translate-y-px"
-               style="border-color:var(--border); background:var(--surface-1); hover-border-color:var(--brand)"
             >
-               <!-- left -->
                <div class="min-w-0">
-                  <h3
-                     class="text-base font-semibold"
-                     style="color:var(--text-1)"
-                  >
+                  <h3 class="text-base font-semibold">
                      {p.title}
                   </h3>
                   <p
@@ -67,9 +62,7 @@
                   </p>
                   <div class="flex flex-wrap gap-2 mt-3">
                      {#each p.tags as t}
-                        <span
-                           class="px-2 py-2 text-[0.65rem] uppercase tracking-wider rounded border"
-                           style="border-color:var(--border); color:var(--text-2)"
+                        <span class="px-2 py-2 text-[0.65rem] uppercase tracking-wider rounded border"
                            >{t}</span
                         >
                      {/each}
@@ -83,7 +76,7 @@
                         target="_blank"
                         rel="noopener"
                         class="px-3 py-1.5 rounded-md border transition-colors"
-                        style="border-color:var(--border); color:var(--text-2); hover-border-color:var(--brand); hover:color:var(--brand)"
+                        style=" color:var(--text-2);"
                      >
                         Code
                      </a>

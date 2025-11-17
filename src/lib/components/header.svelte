@@ -1,36 +1,34 @@
 <script lang="ts">
    import { afterNavigate } from "$app/navigation";
    import * as config from "$lib/config";
-   import { onDestroy, onMount } from "svelte";
    import { slide } from "svelte/transition";
    import Toggle from "./toggle.svelte";
    let isOpen = $state<boolean>(false);
-   let navRef: any;
-   let unsubscribe: any;
+   let navRef: HTMLElement;
    let scrolled = $state<boolean>(false);
 
-   const handleClickOutside = (event: MouseEvent) => {
-      if (isOpen && navRef && !navRef.contains(event.target as Node)) {
-         isOpen = false;
-      }
-   };
+   $effect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+         if (isOpen && navRef && !navRef.contains(event.target as Node)) {
+            isOpen = false;
+         }
+      };
 
-   const handleScroll = () => {
-      scrolled = window.scrollY > 0;
-   };
+      const handleScroll = () => {
+         scrolled = window.scrollY > 0;
+      };
 
-   onMount(() => {
       window.addEventListener("scroll", handleScroll);
       document.addEventListener("click", handleClickOutside);
-      unsubscribe = afterNavigate(() => {
+
+      afterNavigate(() => {
          isOpen = false;
       });
 
-      onDestroy(() => {
+      return () => {
          window.removeEventListener("scroll", handleScroll);
          document.removeEventListener("click", handleClickOutside);
-         if (unsubscribe) unsubscribe();
-      });
+      };
    });
 </script>
 
@@ -102,15 +100,14 @@
 
    .nav-bar-container.scrolled a,
    .nav-bar-container.scrolled a:visited {
-      color: var(--navbar-text);
+      color: var(--text-2);
    }
 
    .nav-bar-container.scrolled {
-      background-color: var(--surface-4-alpha);
       border-color: var(--surface-1);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      color: var(--navbar-text);
+      color: var(--text-2);
    }
 
    .nav-content {
@@ -120,8 +117,11 @@
    }
 
    .nav-bar-links {
+      color: var(--text-2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       list-style: none;
-      width: 500px;
+      width: 350px;
       font-weight: 700;
       display: flex;
       border-color: var(--navbar-text);
@@ -144,7 +144,7 @@
    }
 
    .nav-bar-container.scrolled .nav-bar-links {
-      background: var(--surface-4-alpha);
+      color: var(--text-2);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
    }
@@ -208,24 +208,6 @@
       transform: rotate(-45deg) translateY(-11px);
    }
 
-   .nav-bar-container.scrolled .hamburger div {
-      background: var(--navbar-text);
-   }
-
-   .nav-bar-container.scrolled .hamburger div::before,
-   .nav-bar-container.scrolled .hamburger div::after {
-      background: var(--navbar-text);
-   }
-
-   .nav-bar-container.scrolled .hamburger div.open {
-      background: transparent;
-   }
-
-   .nav-bar-container.scrolled .hamburger div.open::before,
-   .nav-bar-container.scrolled .hamburger div.open::after {
-      background: var(--navbar-text);
-   }
-
    @media (min-width: 768px) {
       .nav-bar-container {
          margin: 16px 400px;
@@ -236,6 +218,7 @@
       }
 
       .nav-bar-links {
+         width: 500px;
          position: static;
          flex-direction: row;
          background: none;
