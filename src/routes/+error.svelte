@@ -3,12 +3,16 @@
 </script>
 
 <div class="error">
-   <h1>{page.status}: {page.error?.message}</h1>
+   <h1>{page.status} :(</h1>
+   <h2>
+      {page.error?.message}
+   </h2>
 </div>
 
 <style>
    .error {
-      height: 100%;
+      text-align: center;
+      height: 70vh;
       display: grid;
       place-content: center;
       color: #f38ba8;

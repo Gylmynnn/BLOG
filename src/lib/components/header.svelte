@@ -56,8 +56,9 @@
          </button>
       </div>
 
+      <!-- Mobile dropdown menu -->
       {#if isOpen}
-         <ul class="nav-bar-links {isOpen ? 'show' : ''}" transition:slide>
+         <ul class="nav-bar-links" transition:slide>
             <div class="flex justify-between items-start">
                <span class="flex flex-col gap-4">
                   <li><a href="/about">ABOUT</a></li>
@@ -67,15 +68,16 @@
                </span>
             </div>
          </ul>
-      {:else}
-         <ul class="nav-bar-links">
-            <li><a href="/about">ABOUT</a></li>
-            <li><a href="/projects">PROJECTS</a></li>
-            <li><a href="/contact">CONTACT</a></li>
-            <li><a href="/rss.xml" target="_blank">RSS</a></li>
-            <Toggle />
-         </ul>
       {/if}
+
+      <!-- Desktop menu (always visible on lg screens) -->
+      <ul class="nav-bar-links-desktop">
+         <li><a href="/about">ABOUT</a></li>
+         <li><a href="/projects">PROJECTS</a></li>
+         <li><a href="/contact">CONTACT</a></li>
+         <li><a href="/rss.xml" target="_blank">RSS</a></li>
+         <Toggle />
+      </ul>
    </div>
 </nav>
 
@@ -88,9 +90,14 @@
       left: 0;
       right: 0;
       z-index: 999;
+      pointer-events: none;
       transition:
          background-color 0.3s ease,
          border-color 0.3s ease;
+   }
+
+   .nav-content {
+      pointer-events: auto;
    }
 
    .nav-bar-container a,
@@ -134,24 +141,14 @@
       top: calc(100% + 10px);
       border-radius: 12px;
       box-shadow: var(--shadow-4);
-      opacity: 0;
-      transform: translateY(-10px);
-      transition:
-         opacity 0.3s ease,
-         transform 0.3s ease,
-         background-color 0.3s ease;
       z-index: 10;
+      pointer-events: auto;
    }
 
    .nav-bar-container.scrolled .nav-bar-links {
       color: var(--text-2);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-   }
-
-   .nav-bar-links.show {
-      opacity: 1;
-      transform: translateY(0);
    }
 
    .hamburger {
@@ -208,6 +205,17 @@
       transform: rotate(-45deg) translateY(-11px);
    }
 
+   .nav-bar-links-desktop {
+      display: none;
+      color: var(--text-2);
+      list-style: none;
+      font-weight: 700;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--size-7);
+      pointer-events: auto;
+   }
+
    @media (min-width: 768px) {
       .nav-bar-container {
          margin: 16px 400px;
@@ -217,16 +225,8 @@
          display: none;
       }
 
-      .nav-bar-links {
-         width: 500px;
-         position: static;
-         flex-direction: row;
-         background: none;
-         box-shadow: none;
-         padding: 0;
-         gap: var(--size-7);
-         opacity: 1;
-         transform: none;
+      .nav-bar-links-desktop {
+         display: flex;
       }
    }
 </style>
