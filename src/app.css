@@ -1,12 +1,15 @@
 @import "tailwindcss";
 @import "@fontsource/atkinson-hyperlegible";
 @import "@fontsource/jetbrains-mono";
+@import '@fontsource/iosevka';
 
 html {
    overflow-y: scroll;
    scrollbar-width: none;
-   --font-system-ui: "Atkinson Hyperlegible", sans-serif;
-   --font-monospace-code: "JetBrains Mono", monospace;
+   --font-system-ui: "Iosevka", sans-serif;
+   /* --font-system-ui: "Atkinson Hyperlegible", sans-serif; */
+   --font-monospace-code: "Iosevka", monospace;
+   /* --font-monospace-code: "JetBrains Mono", monospace; */
 
    /* dark */
    --brand-dark: #e57474;
@@ -175,7 +178,8 @@ li {
    }
 
    :is(ul, ol) {
-      list-style-type: "🔥";
+      /* list-style-type: "🔥"; */
+      list-style-type: ":=";
       padding-left: var(--size-5);
    }
 

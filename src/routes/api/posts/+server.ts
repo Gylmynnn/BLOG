@@ -1,8 +1,8 @@
 import { json } from "@sveltejs/kit";
 import type { Post } from "$lib/types";
 
-async function getPosts() {
-   let posts: Post[] = [];
+async function getPosts(): Promise<Array<Post>> {
+   let posts: Array<Post> = [];
 
    const paths = import.meta.glob("/src/posts/*.md", { eager: true });
 
@@ -17,15 +17,12 @@ async function getPosts() {
       }
    }
 
-   posts = posts.sort(
-      (first, second) =>
-         new Date(second.date).getTime() - new Date(first.date).getTime(),
-   );
+   posts = posts.sort((first, second) => new Date(second.date).getTime() - new Date(first.date).getTime());
 
    return posts;
 }
 
-export async function GET() {
+export async function GET(): Promise<Response> {
    const posts = await getPosts();
    return json(posts);
 }

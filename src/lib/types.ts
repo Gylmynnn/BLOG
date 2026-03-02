@@ -5,6 +5,6 @@ export interface Post {
    slug: string;
    description: string;
    date: string;
-   categoris: Categoris[];
+   categoris: Array<Categoris>;
    published: boolean;
 }

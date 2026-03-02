@@ -7,25 +7,25 @@
    let navRef: HTMLElement;
    let scrolled = $state<boolean>(false);
 
-   $effect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
+   $effect((): (() => void) => {
+      const handleClickOutside = (event: MouseEvent): void => {
          if (isOpen && navRef && !navRef.contains(event.target as Node)) {
             isOpen = false;
          }
       };
 
-      const handleScroll = () => {
+      const handleScroll = (): void => {
          scrolled = window.scrollY > 0;
       };
 
       window.addEventListener("scroll", handleScroll);
       document.addEventListener("click", handleClickOutside);
 
-      afterNavigate(() => {
+      afterNavigate((): void => {
          isOpen = false;
       });
 
-      return () => {
+      return (): void => {
          window.removeEventListener("scroll", handleScroll);
          document.removeEventListener("click", handleClickOutside);
       };
@@ -216,7 +216,8 @@
       pointer-events: auto;
    }
 
-   @media (min-width: 768px) {
+   /* @media (min-width: 768px) { */
+   @media (min-width: 1400px) {
       .nav-bar-container {
          margin: 16px 400px;
       }

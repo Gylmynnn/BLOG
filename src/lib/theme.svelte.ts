@@ -1,6 +1,11 @@
 import { browser } from "$app/environment";
 
-class Theme {
+abstract class ThemeFeature {
+   // feat : toggle light and dark mode
+   abstract toggle: () => void
+}
+
+class Theme implements ThemeFeature {
    currentTheme = $state(browser && localStorage.getItem("color-scheme"));
 
    toggle = (): void => {

@@ -2,7 +2,7 @@ import * as config from "$lib/config";
 import type { Post } from "$lib/types";
 import type { RequestEvent } from "@sveltejs/kit";
 
-function escapeXml(str: string) {
+function escapeXml(str: string) : string {
     return str
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
@@ -24,7 +24,7 @@ export async function GET({ fetch }: RequestEvent) {
 
     const posts: Post[] = await response.json();
 
-    const xml : string = `
+    const xml: string = `
 		<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
 			<channel>
 				<title>${escapeXml(config.title)}</title>

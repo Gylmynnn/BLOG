@@ -2,7 +2,7 @@ import { error } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 import type { Post } from "$lib/types";
 
-export const load: PageLoad = async ({ params }) => {
+export const load: PageLoad = async ({ params }) : Promise<any> => {
    try {
       const post = await import(`../../posts/${params.slug}.md`);
       const metadata = post.metadata as Post;

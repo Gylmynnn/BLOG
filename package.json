@@ -26,10 +26,13 @@
 	},
 	"dependencies": {
 		"@fontsource/atkinson-hyperlegible": "^5.1.1",
+		"@fontsource/iosevka": "^5.2.5",
 		"@fontsource/jetbrains-mono": "^5.1.2",
 		"lucide-svelte": "^0.475.0",
 		"open-props": "^1.7.12",
 		"path": "^0.12.7",
+		"prettier": "^3.7.4",
+		"prettier-plugin-svelte": "^3.4.0",
 		"shiki": "^3.0.0"
 	}
 }
