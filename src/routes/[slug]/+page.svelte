@@ -31,7 +31,7 @@
   </div>
 
   <br />
-  <div class="prose">
+  <div class="prose pb-14">
     <data.content />
   </div>
 </article>
@@ -39,9 +39,11 @@
 <style>
   article {
     /* max-inline-size: var(--size-content-3); */
-    max-inline-size: 60%;
+    max-inline-size: 100%;
     margin-inline: auto;
-
+    @media (min-width: 1440px) {
+      max-inline-size: 60%;
+    }
     h1 {
       text-transform: capitalize;
     }

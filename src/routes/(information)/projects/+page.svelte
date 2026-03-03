@@ -31,7 +31,7 @@
   ];
 </script>
 
-<section class="lg:px-8 lg:pt-20 py-20 lg:py-0" style="background:var(--background)">
+<section class=" lg:px-8 lg:pt-20 py-20 lg:py-0" style="background:var(--background)">
   <div class="max-w-3xl !mx-auto">
     <header class="mb-10">
       <h2 class="text-3xl md:text-4xl font-light tracking-wide" style="color:var(--text-1)">Selected work</h2>

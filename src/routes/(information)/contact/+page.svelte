@@ -4,7 +4,7 @@
 </svelte:head>
 
 <section
-  class="flex flex-col items-center justify-center lg:py-32 py-16 px-6 lg:px-8 transition-opacity duration-700"
+  class=" h-[90vh] flex flex-col items-center justify-center lg:py-32 py-16 px-6 lg:px-8 transition-opacity duration-700"
   style="background:var(--background);"
 >
   <div class="max-w-xl w-full text-center space-y-6">
