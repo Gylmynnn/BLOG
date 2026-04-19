@@ -1,11 +1,9 @@
 <script lang="ts">
    import { afterNavigate } from "$app/navigation";
    import * as config from "$lib/config";
-   import { slide } from "svelte/transition";
    import Toggle from "./toggle.svelte";
    let isOpen = $state<boolean>(false);
    let navRef: HTMLElement;
-   let scrolled = $state<boolean>(false);
 
    $effect((): (() => void) => {
       const handleClickOutside = (event: MouseEvent): void => {
@@ -14,11 +12,6 @@
          }
       };
 
-      const handleScroll = (): void => {
-         scrolled = window.scrollY > 0;
-      };
-
-      window.addEventListener("scroll", handleScroll);
       document.addEventListener("click", handleClickOutside);
 
       afterNavigate((): void => {
@@ -26,25 +19,18 @@
       });
 
       return (): void => {
-         window.removeEventListener("scroll", handleScroll);
          document.removeEventListener("click", handleClickOutside);
       };
    });
 </script>
 
-<nav
-   class="nav-bar-container p-4"
-   class:scrolled
-   bind:this={navRef}
-   class:open={isOpen}
->
-   <div class="nav-content">
-      <a href="/" class="nav-bar-title">
+<aside class="sidebar" bind:this={navRef}>
+   <div class="sidebar-header">
+      <a href="/" class="site-title">
          <h4>{config.title}</h4>
       </a>
-
-      <div class="flex gap-2">
-         <span class="lg:hidden pt-2">
+      <div class="mobile-controls">
+         <span class="mobile-toggle">
             <Toggle />
          </span>
          <button
@@ -55,142 +41,106 @@
             <div class:open={isOpen}></div>
          </button>
       </div>
-
-      <!-- Mobile dropdown menu -->
-      {#if isOpen}
-         <ul class="nav-bar-links" transition:slide>
-            <div class="flex justify-between items-start">
-               <span class="flex flex-col gap-4">
-                  <li><a href="/about">ABOUT</a></li>
-                  <li><a href="/projects">PROJECTS</a></li>
-                  <li><a href="/contact">CONTACT</a></li>
-                  <li><a href="/rss.xml" target="_blank">RSS</a></li>
-               </span>
-            </div>
-         </ul>
-      {/if}
-
-      <!-- Desktop menu (always visible on lg screens) -->
-      <ul class="nav-bar-links-desktop">
-         <li><a href="/about">ABOUT</a></li>
-         <li><a href="/projects">PROJECTS</a></li>
-         <li><a href="/contact">CONTACT</a></li>
-         <li><a href="/rss.xml" target="_blank">RSS</a></li>
-         <Toggle />
-      </ul>
    </div>
-</nav>
+
+   <!-- Content (Desktop fixed, Mobile dropdown) -->
+   <div class="sidebar-content" class:open={isOpen}>
+      <nav class="nav-links">
+         <p class="nav-heading">Directory</p>
+         <ul>
+            <li><a href="/">Archive</a></li>
+            <li><a href="/rss.xml" target="_blank">RSS Feed</a></li>
+         </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+         <div class="desktop-toggle">
+            <Toggle />
+         </div>
+         <p class="copyright">&copy; {new Date().getFullYear()} {config.title}.</p>
+      </div>
+   </div>
+</aside>
 
 <style>
-   .nav-bar-container {
-      margin: 8px 10px;
+   .sidebar {
       position: fixed;
-      border-radius: 12px;
+      z-index: 999;
       top: 0;
       left: 0;
       right: 0;
-      z-index: 999;
-      pointer-events: none;
-      transition:
-         background-color 0.3s ease,
-         border-color 0.3s ease;
+      background: color-mix(in oklab, var(--background), transparent 5%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid color-mix(in oklab, var(--border), transparent 50%);
    }
 
-   .nav-content {
-      pointer-events: auto;
-   }
-
-   .nav-bar-container a,
-   .nav-bar-container a:visited {
-      color: var(--text-2);
-   }
-
-   .nav-bar-container.scrolled a,
-   .nav-bar-container.scrolled a:visited {
-      color: var(--text-2);
-   }
-
-   .nav-bar-container.scrolled {
-      border-color: var(--surface-1);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      color: var(--text-2);
-   }
-
-   .nav-content {
+   .sidebar-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      height: 4rem;
+      padding: 0 1.5rem;
    }
 
-   .nav-bar-links {
-      color: var(--text-2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      list-style: none;
-      width: 350px;
-      font-weight: 700;
+   .site-title {
+      text-decoration: none;
+   }
+
+   .site-title h4 {
+      font-family: var(--font-monospace-code);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      font-size: 1.15rem;
+      color: var(--text-1);
+   }
+
+   .mobile-controls {
       display: flex;
-      border-color: var(--navbar-text);
-      flex-direction: column;
+      align-items: center;
       gap: 1rem;
-      background: var(--background);
-      padding: 2rem;
-      position: absolute;
-      right: 1rem;
-      top: calc(100% + 10px);
-      border-radius: 12px;
-      box-shadow: var(--shadow-4);
-      z-index: 10;
-      pointer-events: auto;
    }
 
-   .nav-bar-container.scrolled .nav-bar-links {
-      color: var(--text-2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+   .mobile-toggle {
+      display: block;
+      padding-top: 0.2rem;
    }
 
    .hamburger {
-      gap: 5px;
       cursor: pointer;
       background: none;
       border: none;
       padding: 0.5rem;
       box-shadow: none;
-      z-index: 20;
    }
 
    .hamburger div {
-      width: 25px;
-      height: 3px;
-      background: var(--text-2);
-      border-radius: 3px;
-      transition:
-         transform 0.3s ease,
-         opacity 0.3s ease,
-         background 0.3s ease;
+      width: 20px;
+      height: 1.5px;
+      background: var(--text-1);
+      border-radius: 2px;
       position: relative;
+      transition: background 0.3s ease;
    }
 
    .hamburger div::before,
    .hamburger div::after {
       content: "";
       position: absolute;
-      width: 18px;
-      height: 3px;
-      background: var(--text-2);
-      border-radius: 3px;
-      transition:
-         transform 0.3s ease,
-         background 0.3s ease;
+      width: 100%;
+      height: 1.5px;
+      background: var(--text-1);
+      right: 0;
+      border-radius: 2px;
+      transition: transform 0.3s ease, width 0.3s ease;
    }
 
    .hamburger div::before {
-      top: -8px;
+      top: -6px;
    }
    .hamburger div::after {
-      bottom: -8px;
+      bottom: -6px;
+      width: 14px;
    }
 
    .hamburger div.open {
@@ -198,36 +148,124 @@
    }
 
    .hamburger div.open::before {
-      transform: rotate(45deg) translateY(11px);
+      transform: rotate(45deg) translateY(8px);
+      width: 20px;
    }
 
    .hamburger div.open::after {
-      transform: rotate(-45deg) translateY(-11px);
+      transform: rotate(-45deg) translateY(-8px);
+      width: 20px;
    }
 
-   .nav-bar-links-desktop {
+   .sidebar-content {
       display: none;
-      color: var(--text-2);
-      list-style: none;
-      font-weight: 700;
-      flex-direction: row;
-      align-items: center;
-      gap: var(--size-7);
-      pointer-events: auto;
+      padding: 1.5rem;
+      background: var(--background);
+      border-bottom: 1px solid color-mix(in oklab, var(--border), transparent 50%);
    }
 
-   /* @media (min-width: 768px) { */
-   @media (min-width: 1400px) {
-      .nav-bar-container {
-         margin: 16px 400px;
+   .sidebar-content.open {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 4rem;
+      left: 0;
+      right: 0;
+      box-shadow: 0 20px 40px -20px color-mix(in oklab, var(--surface-4), transparent 10%);
+   }
+
+   .nav-heading {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-2);
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+   }
+
+   .nav-links ul {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+   }
+
+   .nav-links a {
+      display: block;
+      font-size: 1.25rem;
+      color: var(--text-1);
+      text-decoration: none;
+      padding: 0.5rem 0;
+      font-weight: 400;
+      transition: color 0.2s ease, opacity 0.2s ease;
+   }
+
+   .nav-links a:hover {
+      opacity: 0.7;
+   }
+
+   .sidebar-footer {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+   }
+
+   .desktop-toggle {
+      display: none;
+   }
+
+   .copyright {
+      font-size: 0.75rem;
+      color: var(--text-2);
+      font-family: var(--font-monospace-code);
+   }
+
+   @media (min-width: 1024px) {
+      .sidebar {
+         right: auto;
+         bottom: 0;
+         width: 18rem;
+         border-bottom: none;
+         border-right: 1px solid color-mix(in oklab, var(--border), transparent 60%);
+         display: flex;
+         flex-direction: column;
+         background: var(--background); /* Solid background for desktop */
       }
 
-      .hamburger {
+      .sidebar-header {
+         height: auto;
+         padding: 3rem 2rem 2rem 2rem;
+      }
+
+      .mobile-controls {
          display: none;
       }
 
-      .nav-bar-links-desktop {
+      .sidebar-content {
          display: flex;
+         flex-direction: column;
+         flex-grow: 1;
+         position: static;
+         padding: 0 2rem 3rem 2rem;
+         border-bottom: none;
+         box-shadow: none;
+         background: transparent;
+      }
+
+      .nav-links {
+         margin-top: 1rem;
+      }
+
+      .nav-links a {
+         font-size: 1.05rem;
+      }
+
+      .sidebar-footer {
+         margin-top: auto;
+      }
+      
+      .desktop-toggle {
+         display: block;
       }
    }
 </style>

@@ -1,6 +1,6 @@
 ---
-title: Update Last Year
-description: Almost end of 2025
+title: Last Year Quotes Collections
+description: Moreover, as the leadership of the House confirmed last year, the Administration remains opposed to a congressional resolution on the Armenian Genocide due to Turkish objections. This approach sends absolutely the wrong signal to Turkey and to the rest of the world.
 date: "2025-11-17"
 categoris:
     - story

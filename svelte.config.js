@@ -13,6 +13,7 @@ let highlighterInstance = null;
 const installedLanguages = [
    "javascript",
    "typescript",
+   "json",
    "go",
    "sh",
    "svelte",
