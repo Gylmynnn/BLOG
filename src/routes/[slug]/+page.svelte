@@ -57,6 +57,13 @@
         padding-bottom: 4rem;
     }
 
+    .post-body {
+        max-width: 100%;
+        margin-inline: auto;
+    }
+
+    /* Override Tailwind Typography yang membatasi pre */
+
     /* Hero Section */
     .editorial-hero {
         display: flex;
