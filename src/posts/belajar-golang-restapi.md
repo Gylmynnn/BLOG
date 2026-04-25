@@ -1,7 +1,7 @@
 ---
 title: Membangun REST API Sederhana dengan Golang (Native / Tanpa Framework)
 description: Panduan lengkap membangun REST API menggunakan package standar Go (`net/http`) tanpa framework eksternal.
-date: "2025-03-04"
+date: "2026-04-04"
 categoris:
   - Golang
   - RestAPI
@@ -43,6 +43,19 @@ go-rest-api/
 │   └── router.go
 └── go.mod
 ```
+<br/>
+Struktur ini mengikuti prinsip **Separation of Concerns** — setiap file punya satu tanggung jawab yang jelas. Kalau nanti kamu ingin mengganti penyimpanan in-memory ke database PostgreSQL misalnya, kamu hanya perlu mengubah file `repository` tanpa menyentuh handler atau router sama sekali.
+
+<br/>
+<br/>
+
+| Komponen | Tanggung Jawab |
+|---|---|
+| `main.go` | Titik masuk program, rakit semua komponen, nyalakan server |
+| `router/` | Arahkan request HTTP ke handler yang tepat berdasarkan URL |
+| `handler/` | Proses request, validasi input, buat response |
+| `repository/` | Simpan, cari, ubah, dan hapus data |
+| `model/` | Definisikan bentuk/struktur data |
 
 ---
 
@@ -53,6 +66,9 @@ mkdir go-rest-api
 cd go-rest-api
 go mod init go-rest-api
 ```
+<br/>
+
+`mkdir` membuat folder baru, `cd` masuk ke dalamnya. Perintah `go mod init go-rest-api` adalah yang paling penting — ini membuat file `go.mod` yang memberitahu Go bahwa folder ini adalah sebuah *project* (disebut "module"). Isinya seperti identitas kartu nama project kamu. Tanpa ini, Go tidak tahu cara menghubungkan antar file dalam project.
 
 ---
 
@@ -71,6 +87,12 @@ type User struct {
     Email string `json:"email"`
 }
 ```
+
+<br/>
+
+`struct` adalah cara Go mendefinisikan "bentuk" sebuah data, mirip seperti template formulir. Di sini kita mendefinisikan bahwa setiap User punya 3 kolom: `ID` (angka), `Name` (teks), dan `Email` (teks).
+
+Bagian `` `json:"id"` `` disebut *struct tag*. Ini memberitahu Go cara menerjemahkan data ke format JSON. Jadi ketika kamu kirim response ke client, field `ID` akan muncul sebagai `"id"` (huruf kecil), bukan `"ID"`. Ini penting karena konvensi JSON menggunakan huruf kecil, sedangkan Go menggunakan huruf besar untuk nama field yang bisa diakses dari luar package (*exported field*).
 
 ---
 
@@ -156,6 +178,30 @@ func (r *UserRepository) Delete(id int) error {
     return nil
 }
 ```
+<br/>
+
+Repository adalah **lapisan penyimpanan data**. Analoginya seperti laci arsip — semua operasi simpan, cari, ubah, hapus data dilakukan di sini. Handler tidak boleh langsung menyentuh data mentah; semua harus lewat repository. Ini membuat kode lebih terorganisir dan mudah diubah di kemudian hari.
+
+Mari kita bedah bagian-bagian pentingnya:
+
+<br/>
+
+```go
+type UserRepository struct {
+    mu      sync.RWMutex
+    users   map[int]model.User
+    counter int
+}
+```
+<br/>
+
+- `users` adalah *in-memory database* — data disimpan di RAM (bukan di file atau database sungguhan). Konsekuensinya, data akan hilang saat server dimatikan.
+- `counter` adalah auto-increment ID, mirip seperti primary key di database. Setiap kali user baru dibuat, counter bertambah 1.
+- `sync.RWMutex` adalah **kunci pengaman untuk concurrent access**. Bayangkan banyak orang mengakses API bersamaan — tanpa kunci ini, bisa terjadi *race condition* (dua request menulis data di waktu yang sama, hasilnya bisa rusak atau hilang). `RWMutex` membolehkan banyak goroutine membaca sekaligus (`RLock`), tapi hanya satu goroutine yang boleh menulis (`Lock`).
+
+Lima fungsi di bawahnya mewakili operasi dasar database yang disebut **CRUD**: Create (buat), Read (baca — `FindAll` & `FindByID`), Update (ubah), Delete (hapus).
+
+Perhatikan pola `defer r.mu.Unlock()` — kata kunci `defer` memastikan kunci selalu dilepas setelah fungsi selesai, bahkan jika terjadi error di tengah jalan. Ini mencegah *deadlock* (kondisi di mana semua goroutine saling menunggu kunci yang tidak pernah dilepas).
 
 ---
 
@@ -282,6 +328,54 @@ func (h *UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
     writeJSON(w, http.StatusOK, map[string]string{"message": "user deleted"})
 }
 ```
+<br/>
+
+Handler adalah **penerima request HTTP**. Ketika ada request masuk, handler yang memutuskan: apakah data valid? Apa yang harus dilakukan? Apa yang harus dikembalikan ke client? Analoginya seperti kasir di restoran — menerima pesanan (request), meneruskan ke dapur (repository), lalu membawa makanan kembali ke meja (response).
+
+Mari kita bedah tiga fungsi helper-nya:
+
+<br/>
+
+```go
+func writeJSON(w http.ResponseWriter, status int, data any) {
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(status)
+    json.NewEncoder(w).Encode(data)
+}
+```
+
+<br/>
+
+Fungsi ini mengirim response dalam format JSON. `w.Header().Set("Content-Type", "application/json")` memberitahu client bahwa isi response adalah JSON, bukan HTML atau teks biasa. `w.WriteHeader(status)` mengirim HTTP status code (misalnya `200 OK` atau `404 Not Found`). Fungsi ini dibuat agar tidak perlu menulis ulang kode yang sama di setiap handler.
+
+<br/>
+
+```go
+func writeError(w http.ResponseWriter, status int, message string) {
+    writeJSON(w, status, map[string]string{"error": message})
+}
+```
+
+<br/>
+
+Shortcut khusus untuk mengirim response error. Misalnya memanggil `writeError(w, 404, "user not found")` akan menghasilkan response `{"error": "user not found"}` dengan status `404`.
+
+<br/>
+
+```go
+func extractID(path string) (int, error) {
+    parts := strings.Split(strings.Trim(path, "/"), "/")
+    if len(parts) < 2 {
+        return 0, strconv.ErrSyntax
+    }
+    return strconv.Atoi(parts[len(parts)-1])
+}
+```
+<br/>
+
+Mengambil angka ID dari URL. Misalnya dari `/users/3`, fungsi ini memotong string berdasarkan tanda `/` menjadi slice `["users", "3"]`, lalu mengambil elemen terakhir `"3"` dan mengubahnya menjadi angka integer `3`.
+
+<br/>
 
 ---
 
@@ -338,6 +432,18 @@ func NewRouter(userHandler *handler.UserHandler) http.Handler {
     return mux
 }
 ```
+<br/>
+
+Router adalah **peta jalan** untuk request HTTP. Ketika ada request masuk ke server, router yang memutuskan handler mana yang akan dipanggil berdasarkan URL dan HTTP method-nya.
+
+`http.NewServeMux()` adalah *multiplexer* bawaan Go — ini yang mencocokkan URL request dengan handler yang tepat. Kita mendaftarkan dua pola URL:
+
+- `/users` — menangani request tanpa ID (GET semua user, POST buat user baru)
+- `/users/` — menangani request dengan ID di belakangnya (GET, PUT, DELETE by ID). Tanda `/` di akhir penting karena di Go, pola yang diakhiri `/` akan mencocokkan semua URL yang diawali dengan pola tersebut.
+
+Satu URL bisa menangani banyak *method* HTTP. Router memeriksa `r.Method` untuk menentukan tindakan yang tepat. `GET /users` artinya "ambil semua user", tapi `POST /users` artinya "buat user baru" — URL sama, tindakan berbeda. Ini adalah konvensi standar REST API.
+
+<br/>
 
 ---
 
@@ -373,6 +479,31 @@ func main() {
     }
 }
 ```
+<br/>
+
+`main.go` adalah **titik masuk program** — kode yang pertama kali dijalankan Go. Di sini semua bagian dirakit menjadi satu, seperti memasang semua komponen mesin sebelum menyalakannya.
+
+<br/>
+
+```go
+userRepo    := repository.NewUserRepository()  // buat "database" in-memory
+userHandler := handler.NewUserHandler(userRepo) // buat handler, kasih akses ke database
+mux         := router.NewRouter(userHandler)    // buat router, kasih akses ke handler
+```
+<br/>
+
+Pola ini disebut **dependency injection** — setiap komponen "disuntik" dengan komponen yang dibutuhkannya. Handler butuh repository untuk mengakses data, maka repository dikirim ke handler saat pembuatan. Keuntungannya: kode lebih mudah diuji karena kita bisa mengganti implementasi tanpa mengubah logika handler.
+
+<br/>
+
+```go
+http.ListenAndServe(":8080", mux)
+```
+<br/>
+
+Perintah ini artinya: "dengarkan koneksi di port 8080, dan gunakan `mux` untuk memproses semua request yang masuk." Port 8080 adalah konvensi umum untuk server development (port 80 adalah HTTP standar, tapi butuh hak akses administrator).
+
+<br/>
 
 ---
 
@@ -384,6 +515,8 @@ go run main.go
 
 <br/>
 
+`go run` mengompilasi dan langsung menjalankan program dalam satu perintah — cocok untuk development. Untuk produksi, gunakan `go build` terlebih dahulu untuk menghasilkan file executable, lalu jalankan file tersebut.
+
 Output:
 ```
 Server berjalan di http://localhost:8080
@@ -393,12 +526,17 @@ Server berjalan di http://localhost:8080
 
 ## Langkah 8 — Testing dengan curl
 
+Setelah server berjalan, buka terminal baru dan coba endpoint berikut. Ini adalah alur lengkap yang menggambarkan siklus hidup data dari create hingga delete.
+
 ### Buat User (POST)
 ```bash
 curl -X POST http://localhost:8080/users \
   -H "Content-Type: application/json" \
   -d '{"name": "Budi Santoso", "email": "budi@email.com"}'
 ```
+<br/>
+
+Flag `-X POST` menentukan HTTP method. Flag `-H` menambahkan header request. Flag `-d` mengirim data di body request. Server akan membalas dengan user yang baru dibuat, lengkap dengan ID yang di-generate otomatis.
 
 <br/>
 
@@ -408,12 +546,15 @@ curl -X POST http://localhost:8080/users \
 ```
 
 ---
-
 ### Ambil Semua User (GET)
 ```bash
 curl http://localhost:8080/users
 ```
 
+<br/>
+Request GET paling sederhana — tanpa flag tambahan karena GET adalah method default curl. Response berupa array JSON, bahkan jika hanya ada satu user.
+
+<br/>
 <br/>
 
 **Response:**
@@ -428,6 +569,8 @@ curl http://localhost:8080/users
 curl http://localhost:8080/users/1
 ```
 
+Angka `1` di akhir URL adalah ID user. Kalau ID tidak ditemukan, server akan membalas dengan `404 Not Found` dan pesan error.
+
 ---
 
 ### Update User (PUT)
@@ -437,12 +580,15 @@ curl -X PUT http://localhost:8080/users/1 \
   -d '{"name": "Budi Updated", "email": "budi.new@email.com"}'
 ```
 
+PUT menggantikan seluruh data user dengan data baru yang dikirim. Perhatikan bahwa kita harus mengirim semua field (name dan email), bukan hanya field yang berubah.
+
 ---
 
 ### Hapus User (DELETE)
 ```bash
 curl -X DELETE http://localhost:8080/users/1
 ```
+
 <br/>
 
 **Response:**
