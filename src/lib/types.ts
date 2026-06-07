@@ -1,4 +1,5 @@
 export type Categoris = "sveltekit" | "svelte";
+export type Visibility = "public" | "private";
 
 export interface Post {
   title: string;
@@ -7,5 +8,7 @@ export interface Post {
   date: string;
   categoris: Array<Categoris>;
   published: boolean;
+  visibility?: Visibility;
+  password?: string;
   image?: string;
 }

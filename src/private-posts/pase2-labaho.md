@@ -5,6 +5,8 @@ date: "2026-06-05"
 categoris:
   - programming
 published: true
+visibility: private
+password: "hihihi"
 ---
 
 <script>
