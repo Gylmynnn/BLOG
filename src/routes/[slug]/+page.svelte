@@ -1,8 +1,17 @@
 <script lang="ts">
     import { formatDate } from "$lib/utils";
+    import PasswordPrompt from "$lib/components/PasswordPrompt.svelte";
     import type { PageProps } from "./$types";
 
     let { data }: PageProps = $props();
+    let isPasswordCorrect = $state(false);
+
+    $effect(() => {
+      // Jika post tidak private, langsung tampilkan
+      if (data.meta.visibility !== 'private') {
+        isPasswordCorrect = true;
+      }
+    });
 </script>
 
 <svelte:head>
@@ -12,7 +21,15 @@
     <meta property="og:title" content={data.meta.title} />
 </svelte:head>
 
-<article class="post-page">
+{#if data.meta.visibility === 'private' && !isPasswordCorrect}
+  <PasswordPrompt 
+    requiredPassword={data.meta.password || ""}
+    onUnlock={(isCorrect) => {
+      isPasswordCorrect = isCorrect;
+    }}
+  />
+{:else}
+  <article class="post-page">
     <header class="editorial-hero">
         <div class="tags">
             {#each data.meta.categoris as category}
@@ -47,7 +64,9 @@
     <div class="post-body prose">
         <data.content />
     </div>
-</article>
+  </article>
+{/if}
+
 
 <style>
     .post-page {
