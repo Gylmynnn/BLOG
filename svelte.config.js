@@ -4,12 +4,16 @@ import { createHighlighter } from "shiki";
 import adapter from "@sveltejs/adapter-vercel";
 import fs from "fs";
 
-const everblush = JSON.parse(
+const everblushDark = JSON.parse(
     fs.readFileSync("./src/lib/shiki.theme.json", "utf8")
 );
 
-/** Cache highlighter agar tidak membuat instance baru setiap kali */
+const everblushLight = JSON.parse(
+    fs.readFileSync("./src/lib/shiki.theme.light.json", "utf8")
+);
+
 let highlighterInstance = null;
+
 const installedLanguages = [
     "javascript",
     "typescript",
@@ -25,10 +29,11 @@ const installedLanguages = [
 function getHighlighter() {
     if (!highlighterInstance) {
         highlighterInstance = createHighlighter({
-            themes: [everblush],
+            themes: [everblushDark, everblushLight],
             langs: installedLanguages,
         });
     }
+
     return highlighterInstance;
 }
 
@@ -41,13 +46,21 @@ const mdsvexOptions = {
     highlight: {
         highlighter: async (code, lang = "text") => {
             const highlighter = await getHighlighter();
+
             const html = escapeSvelte(
                 highlighter.codeToHtml(code, {
                     lang,
-                    theme: "everblush",
-                }),
+                    themes: {
+                        light: "everblush-light",
+                        dark: "everblush",
+                    },
+                    defaultColor: "light",
+                })
             );
-            return `{@html \`${html}\` }`;
+
+            const encodedCode = Buffer.from(code).toString("base64");
+
+            return `<div class="code-block-wrapper" data-code="${encodedCode}" data-lang="${lang}">{@html \`${html}\` }</div>`;
         },
     },
 };

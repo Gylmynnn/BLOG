@@ -1,0 +1,69 @@
+{
+    "name": "everblush-light",
+    "type": "light",
+    "colors": {
+        "editor.background": "#f5f0e8",
+        "editor.foreground": "#232A2D"
+    },
+    "tokenColors": [
+        {
+            "scope": [
+                "comment",
+                "punctuation.definition.comment"
+            ],
+            "settings": {
+                "foreground": "#7a8a8c"
+            }
+        },
+        {
+            "scope": [
+                "string"
+            ],
+            "settings": {
+                "foreground": "#4f8f5f"
+            }
+        },
+        {
+            "scope": [
+                "keyword",
+                "storage.type"
+            ],
+            "settings": {
+                "foreground": "#c65f5f"
+            }
+        },
+        {
+            "scope": [
+                "variable",
+                "identifier"
+            ],
+            "settings": {
+                "foreground": "#232A2D"
+            }
+        },
+        {
+            "scope": [
+                "constant.numeric"
+            ],
+            "settings": {
+                "foreground": "#5f9855"
+            }
+        },
+        {
+            "scope": [
+                "entity.name.function"
+            ],
+            "settings": {
+                "foreground": "#3f83b8"
+            }
+        },
+        {
+            "scope": [
+                "entity.name.type"
+            ],
+            "settings": {
+                "foreground": "#9f5bb5"
+            }
+        }
+    ]
+}

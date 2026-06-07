@@ -1,17 +1,15 @@
 @import "tailwindcss";
 @import "@fontsource/atkinson-hyperlegible";
 @import "@fontsource/jetbrains-mono";
-@import '@fontsource/iosevka';
+@import "@fontsource/iosevka";
 
 html {
     overflow-y: scroll;
     scrollbar-width: none;
-    /* --font-system-ui: "Iosevka", sans-serif; */
+
     --font-system-ui: "Atkinson Hyperlegible", sans-serif;
-    /* --font-monospace-code: "Iosevka", monospace; */
     --font-monospace-code: "JetBrains Mono", monospace;
 
-    /* dark */
     --brand-dark: #e57474;
     --text-1-dark: #dadada;
     --text-2-dark: #b3b9b8;
@@ -20,13 +18,10 @@ html {
     --surface-3-dark: #232a2d;
     --surface-4-dark: #232a2d;
     --surface-4-alpha-dark: #dadada;
-    /* Light navbar bg in dark mode */
     --navbar-text-dark: #141b1e;
-    /* Dark text for light navbar */
     --background-dark: #141b1e;
     --border-dark: #232a2d;
 
-    /* light */
     --brand-light: #e57474;
     --text-1-light: #141b1e;
     --text-2-light: #232a2d;
@@ -34,10 +29,8 @@ html {
     --surface-2-light: #b3b9b8;
     --surface-3-light: #b3b9b8;
     --surface-4-light: #b3b9b8;
-    --surface-4-alpha-light: #232A2D;
-    /* Dark navbar bg in light mode */
+    --surface-4-alpha-light: #232a2d;
     --navbar-text-light: #dadada;
-    /* Light text for dark navbar */
     --background-light: #dadada;
     --border-light: #b3b9b8;
 }
@@ -59,7 +52,7 @@ html {
 }
 
 @media (prefers-color-scheme: light) {
-    :root {
+    :root:not([color-scheme]) {
         color-scheme: light;
 
         --brand: var(--brand-light);
@@ -76,7 +69,7 @@ html {
     }
 }
 
-[color-scheme="dark"] {
+:root[color-scheme="dark"] {
     color-scheme: dark;
 
     --brand: var(--brand-dark);
@@ -92,7 +85,7 @@ html {
     --border: var(--border-dark);
 }
 
-[color-scheme="light"] {
+:root[color-scheme="light"] {
     color-scheme: light;
 
     --brand: var(--brand-light);
@@ -119,9 +112,16 @@ body {
 
 html {
     color: var(--text-1);
-    accent-color: var(--link);
-    background-image: var(--background);
+    accent-color: var(--brand);
+    background: var(--background);
     background-attachment: fixed;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-system-ui);
+    background: var(--background);
+    color: var(--text-1);
 }
 
 img {
@@ -158,16 +158,12 @@ li {
     color: var(--text-1);
 }
 
-/* ... */
-
 .prose {
-
     p {
         :not(:is(h2, h3, h4, h5, h6) + p) {
             margin-top: var(--size-7);
         }
 
-        /* ignore paragraph tag around images */
         &:has(img) {
             display: contents;
         }
@@ -179,8 +175,7 @@ li {
     }
 
     :is(ul, ol) {
-        /* list-style-type: "🔥"; */
-        list-style-type: "👑";
+        list-style-type: "👑   ";
         padding-left: var(--size-5);
     }
 
@@ -198,4 +193,51 @@ li {
         white-space: pre-wrap;
         word-wrap: break-word;
     }
+
+    code {
+        font-family: var(--font-monospace-code);
+    }
+
+    .code-block-wrapper {
+        overflow: hidden;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+    }
+
+    .code-block-wrapper pre {
+        padding: 1.5rem !important;
+        border-radius: 0 !important;
+        max-inline-size: none;
+        white-space: pre;
+        word-wrap: normal;
+        line-height: 1.75;
+        margin: 0;
+        overflow-x: auto;
+    }
+
+    .code-block-wrapper pre code {
+        white-space: pre;
+        word-spacing: 0.2em;
+        font-family: var(--font-monospace-code);
+    }
+}
+
+:root[color-scheme="dark"] .shiki,
+:root[color-scheme="dark"] .shiki span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+:root[color-scheme="dark"] .code-block-wrapper {
+    background: var(--surface-2);
+    border-color: var(--border);
+}
+
+:root[color-scheme="light"] .code-block-wrapper {
+    background: var(--surface-1);
+    border-color: var(--border);
 }

@@ -1,13 +1,12 @@
 <script lang="ts">
     import { formatDate } from "$lib/utils";
-    import PasswordPrompt from "$lib/components/PasswordPrompt.svelte";
+    import PasswordPrompt from "$lib/components/password-prompt.svelte";
     import type { PageProps } from "./$types";
 
     let { data }: PageProps = $props();
     let isPasswordCorrect = $state(false);
 
     $effect(() => {
-      // Jika post tidak private, langsung tampilkan
       if (data.meta.visibility !== 'private') {
         isPasswordCorrect = true;
       }
@@ -49,17 +48,11 @@
         </div>
     </header>
 
-    {#if data.meta.image}
-        <figure class="hero-image">
-            <img src={data.meta.image} alt={data.meta.title} class="image-placeholder" />
-            <figcaption>Illustration or preview related to {data.meta.title}</figcaption>
-        </figure>
-    {:else}
-        <figure class="hero-image">
-            <div class="image-placeholder" aria-hidden="true"></div>
-            <figcaption>Illustration or preview related to {data.meta.title}</figcaption>
-        </figure>
-    {/if}
+        <!-- <figure class="hero-image"> -->
+        <!--     <img src={data.meta.image} alt={data.meta.title} class="image-placeholder" /> -->
+        <!--     <figcaption>Illustration or preview related to {data.meta.title}</figcaption> -->
+        <!-- </figure> -->
+        <!---->
 
     <div class="post-body prose">
         <data.content />

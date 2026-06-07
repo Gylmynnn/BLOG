@@ -7,12 +7,10 @@ export const load: PageLoad = async ({ params, fetch }): Promise<any> => {
     let post;
     let metadata;
 
-    // Coba load dari public posts terlebih dahulu
     try {
       post = await import(`../../posts/${params.slug}.md`);
       metadata = post.metadata as Post;
     } catch {
-      // Jika tidak ada di public, coba dari private posts
       post = await import(`../../private-posts/${params.slug}.md`);
       metadata = post.metadata as Post;
     }
