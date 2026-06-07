@@ -1,9 +1,6 @@
 <script lang="ts">
     import Header from "$lib/components/header.svelte";
     import PageTransition from "./transition.svelte";
-    import "open-props/style";
-    import "open-props/normalize";
-    import "open-props/buttons";
     import "../app.css";
     let { children, data } = $props();
 </script>
@@ -85,8 +82,8 @@
         }
 
         .root-layout-container {
-            width: 100%; /* ubah ini — biar penuh sisa ruang */
-            max-width: 90rem; /* opsional, biar tidak terlalu lebar di layar besar */
+            width: 100%;
+            max-width: 90rem;
             margin-inline: auto;
         }
     }
