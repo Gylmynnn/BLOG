@@ -2,7 +2,9 @@ import type { Post } from "$lib/types";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch }) => {
-   const response = await fetch("api/posts");
-   const posts: Post[] = await response.json();
-   return { posts };
+    async function getPosts(): Promise<Array<Post>> {
+        const response = await fetch("api/posts");
+        return await response.json() as Array<Post>;
+    }
+    return { posts: await getPosts() };
 };

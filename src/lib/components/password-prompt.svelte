@@ -1,11 +1,11 @@
 <script lang="ts">
     import type { Snippet } from "svelte";
-
     interface Props {
         requiredPassword: string;
         onUnlock?: (isCorrect: boolean) => void;
         children?: Snippet;
     }
+
 
     let { requiredPassword, onUnlock, children }: Props = $props();
 
@@ -111,25 +111,6 @@
         padding: 1.25rem;
         color: var(--text-1);
     }
-
-
-    .icon-wrapper {
-        width: 4rem;
-        height: 4rem;
-        display: grid;
-        place-items: center;
-        margin: 0 auto 1.25rem;
-        border-radius: 1.25rem;
-        color: var(--brand);
-        background: color-mix(in srgb, var(--brand) 14%, transparent);
-        border: 1px solid color-mix(in srgb, var(--brand) 28%, transparent);
-    }
-
-    .icon {
-        width: 2rem;
-        height: 2rem;
-    }
-
 
     .label {
         display: inline-flex;
@@ -296,17 +277,6 @@
         .private-card {
             padding: 1.35rem;
             border-radius: 1.25rem;
-        }
-
-        .icon-wrapper {
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 1rem;
-        }
-
-        .icon {
-            width: 1.75rem;
-            height: 1.75rem;
         }
 
         .form {

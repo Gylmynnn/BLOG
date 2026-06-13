@@ -221,6 +221,111 @@ li {
         word-spacing: 0.2em;
         font-family: var(--font-monospace-code);
     }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+        margin-block: var(--size-5);
+    }
+
+    thead {
+        background-color: var(--surface-2);
+    }
+
+    th {
+        text-align: left;
+        font-weight: 500;
+        padding: 0.6rem 1rem;
+        color: var(--text-2);
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--border);
+    }
+
+    td {
+        padding: 0.6rem 1rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-1);
+        vertical-align: top;
+        line-height: 1.6;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    table code {
+        font-family: var(--font-monospace-code);
+        font-size: 0.8rem;
+        background: var(--surface-1);
+        padding: 2px 6px;
+        border-radius: 5px;
+        border: 1px solid var(--border);
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    blockquote {
+        background-color: var(--surface-2);
+        padding: 0.875rem 1rem 0.875rem 1.25rem;
+        border-radius: 0 8px 8px 0;
+        margin-inline: 0;
+        margin-block: var(--size-5);
+        color: var(--text-2);
+        font-size: 0.9rem;
+        line-height: 1.7;
+    }
+
+    blockquote p {
+        margin: 0;
+    }
+
+    blockquote :is(ul, ol) {
+        margin-block: var(--size-2);
+    }
+
+    /* horizontal rule --- */
+    hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin-block: var(--size-8);
+    }
+
+    /* method badge — kolom pertama tabel */
+    tbody td:first-child code {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        padding: 3px 8px;
+        border-radius: 5px;
+    }
+
+    blockquote :is(ul, ol) {
+        list-style-type: none;
+        padding-left: 12px;
+        margin-block: var(--size-2);
+    }
+
+    blockquote :is(ul, ol) li {
+        padding-inline-start: 0;
+        padding-left: 1rem;
+        position: relative;
+        margin-block: var(--size-1);
+    }
+
+    blockquote :is(ul, ol) li::before {
+        content: "⭐";
+        position: absolute;
+        left: 0;
+        color: var(--brand);
+        font-size: 0.85em;
+    }
 }
 
 :root[color-scheme="dark"] .shiki,
